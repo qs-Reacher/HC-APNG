@@ -275,63 +275,15 @@ class Natural_Neighbor(object):
         return T
 
     def merge(self):
-        cluster_IDs = [] # 需要合并的簇a和簇b的id
-        paper_cluster = {}  # 做一个簇用与跟踪合并,防止有问题
-        for i, va in enumerate(self.clusters):
-            paper_cluster[i] = va
-        while len(paper_cluster) > self.nc:  # 当合并后的簇数量大于阈值时继续合并
-            sim = self.diance(paper_cluster)
-            max_similarity = -1  # 最大相似度初始化为负数
-            selected_pair = None
-
-            for pair, similarity in sim.items():
-                if similarity > max_similarity:  # 找到最相似的簇对
-                    max_similarity = similarity
-                    selected_pair = pair
-            if selected_pair:
-                cluster_a, cluster_b = selected_pair
-                paper_cluster[cluster_a] = paper_cluster[cluster_b].union(paper_cluster[cluster_a])
-                del paper_cluster[cluster_b]  # 删除被合并的
-
-            new_paper_cluster = {}
-            new_cluster_index = 0
-            for old_cluster_index, papers in paper_cluster.items():
-                new_paper_cluster[new_cluster_index] = papers
-                new_cluster_index += 1
-            paper_cluster = new_paper_cluster
-        # self.plt(paper_cluster)
-        paper_cluster = self.assign_remaining_points(paper_cluster)
+        
+        # 该部分代码将在论文录用后公开
 
         return paper_cluster
 
     # 分配剩余点
     def assign_remaining_points(self, paper_cluster):
-        # 构建KD树
-        kdtree = KDTree(self.data)
-
-        for point in self.remaining_points:
-            nearest_point_index = None
-            found_cluster = False
-            # 使用KD树寻找最近邻点
-            _, nearest_point_indices = kdtree.query([self.data[point]], k=len(self.data))
-
-            # 寻找最近邻点所属的簇
-            for nearest_index in nearest_point_indices[0]:
-                for cluster_idx, cluster in paper_cluster.items():
-                    if nearest_index in cluster:
-                        cluster.add(point)
-                        found_cluster = True
-                        break
-                if found_cluster:
-                    break
-
-            # 如果未找到所属的簇，则继续寻找下一个最近邻点
-            if not found_cluster:
-                continue
-
-        # 移除已分配的未分配点
-        self.remaining_points = []
-        # self.plt(paper_cluster)
+       
+        # 该部分代码将在论文录用后公开
 
         return paper_cluster
 
